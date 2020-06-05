@@ -42,33 +42,23 @@ export default {
             for (let i = 0; i < this.numberClubs-1;i++) {
                 let jornada = {
                     numero: i+1,
-                    partidos: [],
+                    
                     partidosObjeto: [],
                 }
-                // let first = result.left[0]
                 for (let j = 0; j < half_length; j++) {
-                    let local = j % 2 == 1 ? result.left[j].id: result.right[j].id
-                    let visita = j % 2 == 0 ? result.left[j].id: result.right[j].id
-                    // console.log(`${ result.left[j].id } - ${ result.right[j].id }`);
-                    jornada.partidos.push(`
-                        ${ local } - ${ visita }
-                    `)
+                    let local = i % 2 == 1 ? result.left[j].id: result.right[j].id
+                    let visita = i % 2 == 0 ? result.left[j].id: result.right[j].id
                     jornada.partidosObjeto.push( {
                         local: local ,
                         visita: visita  ,
                     })
                 }
-                let [izq] = result.left.splice( 1,1 )    ,
-                    [der] = result.right.splice( -1,1 )
-                result.right.unshift(izq)
-                result.left.push(der)
-
+                let [first_izq] = result.left.splice( 1,1 )    ,
+                    [last_der] = result.right.splice( -1,1 )
+                result.right.unshift(first_izq)
+                result.left.push(last_der)
                 this.matches.push(jornada)
             }
-            this.matches.map( ({numero, partidos}) => {
-                console.log({numero})
-                console.table( partidos)
-            })
             this.matches.map( (jornada) => {
                 jornada.partidosObjeto.map( ({local,visita}) => {
                     this.allClubs.map( club => {
@@ -82,9 +72,6 @@ export default {
 
                 )
             })
-            this.allClubs.map( ({id,cntLocal,cntVisita}) => {
-                console.table({id,cntLocal,cntVisita})
-            })
         },
     },
 }
@@ -92,6 +79,22 @@ export default {
 
 <template>
 <div>
+    <div class="jornada" v-for="(jornada,index) in matches" :key="index">
+        <h6>asd</h6>
+        <ul>
+            <li v-for="(partido,i) in jornada.partidosObjeto" :key="i+'q'">
+                {{partido.local}} - {{partido.visita}}
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+
     <form>
         <input type="text" v-model="name">
         <br>
@@ -99,7 +102,7 @@ export default {
         <br>
     </form>
     <br>
-    <table style="border:1px solid;">
+    <!-- <table style="border:1px solid;">
     <thead>
         <tr>
         <th>teams</th>
@@ -114,6 +117,6 @@ export default {
         </td>
         </tr>
     </tbody>
-    </table>
+    </table> -->
 </div>
 </template>
