@@ -3,19 +3,20 @@ export default {
     name:  'Table'    ,
     data(){
     return {
+        observado: 0,
         allClubs : [
-            {id:1, cntVisita: 0,cntLocal:0, last: ''},
-            {id:2, cntVisita: 0,cntLocal:0, last: ''},
-            {id:3, cntVisita: 0,cntLocal:0, last: ''},
-            {id:4, cntVisita: 0,cntLocal:0, last: ''},
-            {id:5, cntVisita: 0,cntLocal:0, last: ''},
-            {id:6, cntVisita: 0,cntLocal:0, last: ''},
-            {id:7, cntVisita: 0,cntLocal:0, last: ''},
-            {id:8, cntVisita: 0,cntLocal:0, last: ''},
-            {id:9, cntVisita: 0,cntLocal:0, last: ''},
-            {id:10, cntVisita: 0,cntLocal:0, last: ''},
-            {id:11, cntVisita: 0,cntLocal:0, last: ''},
-            {id:12, cntVisita: 0,cntLocal:0, last: ''},
+            {id:1, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
+            {id:2, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
+            {id:3, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
+            {id:4, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
+            {id:5, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
+            {id:6, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
+            {id:7, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
+            {id:8, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
+            {id:9, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
+            {id:10, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
+            {id:11, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
+            {id:12, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
 
         ],
         matches: [],
@@ -33,34 +34,40 @@ export default {
             this.name=''
         },
         miAlgoritmo() {
-            let half_length = Math.ceil(this.allClubs.length/2),
-            result = {
-                    right: this.allClubs.slice(half_length),
-                left: this.allClubs.slice(0,half_length),
+            let dividirGrupos = () => {
+                let mitad_tam = Math.ceil(this.allClubs.length/2)
+                return {
+                    derecha: this.allClubs.slice(mitad_tam),
+                    izquierda: this.allClubs.slice(0,mitad_tam),
+                }
             }
-            console.clear()
+            let cambiarLocalia = (i,der,izq) => ({
+                local: i % 2 == 1 ? izq.id: der.id,
+                visita: i % 2 == 0 ? izq.id: der.id
+            })
+            let {derecha, izquierda} = dividirGrupos()
             for (let i = 0; i < this.numberClubs-1;i++) {
                 let jornada = {
                     numero: i+1,
-                    
-                    partidosObjeto: [],
+                    partidos: [],
                 }
-                for (let j = 0; j < half_length; j++) {
-                    let local = i % 2 == 1 ? result.left[j].id: result.right[j].id
-                    let visita = i % 2 == 0 ? result.left[j].id: result.right[j].id
-                    jornada.partidosObjeto.push( {
-                        local: local ,
-                        visita: visita  ,
+                for (let j = 0; j < this.numberClubs/2; j++) {
+                    let {local, visita} = cambiarLocalia( i, derecha[j],izquierda[j])
+                    jornada.partidos.push( {
+                        local, visita
                     })
                 }
-                let [first_izq] = result.left.splice( 1,1 )    ,
-                    [last_der] = result.right.splice( -1,1 )
-                result.right.unshift(first_izq)
-                result.left.push(last_der)
+                //intercambiar items
+                let [second_izq] = izquierda.splice( 1,1 )    ,
+                    [last_der] = derecha.splice( -1,1 )
+                derecha.unshift(second_izq)
+                izquierda.push(last_der)
                 this.matches.push(jornada)
             }
+        },
+        verificarBalanceados: function(){
             this.matches.map( (jornada) => {
-                jornada.partidosObjeto.map( ({local,visita}) => {
+                jornada.partidos.map( ({local,visita}) => {
                     this.allClubs.map( club => {
                         if( club.id === local ) {
                             club.cntLocal++;
@@ -69,21 +76,37 @@ export default {
                         }
                     } )
                 }
-
                 )
             })
-        },
+        }
     },
 }
 </script>
 
 <template>
 <div>
+    <form>
+        <input type="text" v-model="name">
+        <br>
+        <button @click="agregar"> Agregar </button>
+        <br>
+        <select v-model="observado">
+            <option v-for="club in allClubs" :key="club.id" :value="club.id">{{club.id}}</option>
+        </select>
+    </form>
+    <br>
     <div class="jornada" v-for="(jornada,index) in matches" :key="index">
         <h6>asd</h6>
         <ul>
-            <li v-for="(partido,i) in jornada.partidosObjeto" :key="i+'q'">
-                {{partido.local}} - {{partido.visita}}
+            <li v-for="(partido,i) in jornada.partidos" :key="i+'q'">
+                <span :style="[observado == partido.local ? {'background':'red'}:{} ]">
+                    {{partido.local}}
+                </span>
+                -
+                <span :style="[observado == partido.visita ? {'background':'red'}:{} ]">
+
+                  {{partido.visita}}
+                </span>
             </li>
         </ul>
     </div>
@@ -95,13 +118,7 @@ export default {
 
 
 
-    <form>
-        <input type="text" v-model="name">
-        <br>
-        <button @click="agregar"> Agregar </button>
-        <br>
-    </form>
-    <br>
+    
     <!-- <table style="border:1px solid;">
     <thead>
         <tr>
