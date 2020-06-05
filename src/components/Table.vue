@@ -4,9 +4,19 @@ export default {
     data(){
     return {
         allClubs : [
-            '1','2','3','4',
-            '5','6','7','8',
-            '9','10','11','12',
+            {id:1, cntVisita: 0,cntLocal:0, last: ''},
+            {id:2, cntVisita: 0,cntLocal:0, last: ''},
+            {id:3, cntVisita: 0,cntLocal:0, last: ''},
+            {id:4, cntVisita: 0,cntLocal:0, last: ''},
+            {id:5, cntVisita: 0,cntLocal:0, last: ''},
+            {id:6, cntVisita: 0,cntLocal:0, last: ''},
+            {id:7, cntVisita: 0,cntLocal:0, last: ''},
+            {id:8, cntVisita: 0,cntLocal:0, last: ''},
+            {id:9, cntVisita: 0,cntLocal:0, last: ''},
+            {id:10, cntVisita: 0,cntLocal:0, last: ''},
+            {id:11, cntVisita: 0,cntLocal:0, last: ''},
+            {id:12, cntVisita: 0,cntLocal:0, last: ''},
+
         ],
         matches: [],
         numberClubs: 12,
@@ -29,24 +39,52 @@ export default {
                 left: this.allClubs.slice(0,half_length),
             }
             console.clear()
-            console.log({half_length})
             for (let i = 0; i < this.numberClubs-1;i++) {
-                let jornada = []
+                let jornada = {
+                    numero: i+1,
+                    partidos: [],
+                    partidosObjeto: [],
+                }
                 // let first = result.left[0]
                 for (let j = 0; j < half_length; j++) {
-                    jornada.push(`
-                        ${ result.left[j] } - ${ result.right[j] }
+                    let local = j % 2 == 1 ? result.left[j].id: result.right[j].id
+                    let visita = j % 2 == 0 ? result.left[j].id: result.right[j].id
+                    // console.log(`${ result.left[j].id } - ${ result.right[j].id }`);
+                    jornada.partidos.push(`
+                        ${ local } - ${ visita }
                     `)
+                    jornada.partidosObjeto.push( {
+                        local: local ,
+                        visita: visita  ,
+                    })
                 }
                 let [izq] = result.left.splice( 1,1 )    ,
                     [der] = result.right.splice( -1,1 )
-                // console.log({first,izq,der})
                 result.right.unshift(izq)
                 result.left.push(der)
+
                 this.matches.push(jornada)
-                console.table(jornada)
             }
-            // console.table(this.matches)
+            this.matches.map( ({numero, partidos}) => {
+                console.log({numero})
+                console.table( partidos)
+            })
+            this.matches.map( (jornada) => {
+                jornada.partidosObjeto.map( ({local,visita}) => {
+                    this.allClubs.map( club => {
+                        if( club.id === local ) {
+                            club.cntLocal++;
+                        }else if( club.id === visita ){
+                            club.cntVisita++;
+                        }
+                    } )
+                }
+
+                )
+            })
+            this.allClubs.map( ({id,cntLocal,cntVisita}) => {
+                console.table({id,cntLocal,cntVisita})
+            })
         },
     },
 }
