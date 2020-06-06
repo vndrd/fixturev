@@ -2,41 +2,61 @@
 export default {
     name:  'Table'    ,
     data(){
-    return {
-        observado: 0,
-        numEquipos: '',
-        allClubs : [
-            {id:1, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-            {id:2, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-            {id:3, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-            {id:4, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-            {id:5, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-            {id:6, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-            {id:7, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-            {id:8, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-            {id:9, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-            {id:10, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-            {id:11, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-            {id:12, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-        ],
-        matches: [],
-        name: ''
+        return {
+            generarClicked: false,
+            numEquipos: '',
+            allTeams : [
+                
+            ],
+            matches: [],
+            nombre: '',
+            observado: 0,
         }
     },
     mounted(){
-        this.miAlgoritmo()
+    
     },
     methods: {
         agregar(e){
             e.preventDefault()
-            this.name=''
+            this.allTeams.push({
+                id:88,
+                cntVisita: 0,
+                cntLocal:0, 
+                nombre: this.nombre
+            })
+            this.nombre=''
+        },
+        rellenar(){
+            for (let i = 0; i < this.numEquipos; i++) {
+                this.allTeams.push({
+                    name: i,
+                    id: i+1,
+                })                
+            }
+        },
+        generar(e){
+            e.preventDefault()
+            
+            if ( this.numEquipos < 4 ){
+                alert("Introducir número mayor o igual a 4")
+                return 
+            }
+            if ( this.numEquipos %2 === 1 ){
+                alert("Introducir número par")
+                return  
+            }
+            this.rellenar()
+            this.miAlgoritmo()
+
+            this.generarClicked = true
         },
         miAlgoritmo() {
             let dividirGrupos = () => {
-                let mitad_tam = Math.ceil(this.allClubs.length/2)
+                let mitad_tam = Math.ceil(this.numEquipos/2)
                 return {
-                    derecha: this.allClubs.slice(mitad_tam),
-                    izquierda: this.allClubs.slice(0,mitad_tam),
+                    derecha: this.allTeams.slice(mitad_tam),
+                    izquierda: this.allTeams.slice(0,mitad_tam),
                 }
             }
             let cambiarLocalia = (i,der,izq) => ({
@@ -44,12 +64,12 @@ export default {
                 visita: i % 2 == 0 ? izq.id: der.id
             })
             let {derecha, izquierda} = dividirGrupos()
-            for (let i = 0; i < this.allClubs.length-1;i++) {
+            for (let i = 0; i < this.numEquipos-1;i++) {
                 let jornada = {
                     numero: i+1,
                     partidos: [],
                 }
-                for (let j = 0; j < this.allClubs.length/2; j++) {
+                for (let j = 0; j < this.numEquipos/2; j++) {
                     let {local, visita} = cambiarLocalia( i, derecha[j],izquierda[j])
                     jornada.partidos.push( {
                         local, visita
@@ -66,7 +86,7 @@ export default {
         verificarBalanceados: function(){
             this.matches.map( (jornada) => {
                 jornada.partidos.map( ({local,visita}) => {
-                    this.allClubs.map( club => {
+                    this.allTeams.map( club => {
                         if( club.id === local ) {
                             club.cntLocal++;
                         }else if( club.id === visita ){
@@ -76,8 +96,12 @@ export default {
                 }
                 )
             })
-        }
+        },
+        
     },
+    computed: {
+        nroEquiposRestantes: function() { return this.numEquipos }
+    }
 }
 </script>
 
@@ -88,28 +112,32 @@ export default {
             <b-col md="4" class="formulario mb-3" >
                 <div  class="p-5">
                     <label for="text-password" class="text-light">Número de equipos</label>
-                    <b-input type="text" v-model="numEquipos" class="text-center"></b-input>
-                    <b-form-text class="text-light">
+                    <b-input type="text" v-model="numEquipos" :disabled="generarClicked" class="text-center"></b-input>
+                    <b-form-text class="text-light" >
                         Número de equipos par, mayor a 2.
                     </b-form-text>
-                    <b-button variant="success" @click="agregar" class="mt-3">Agregar</b-button>
+                    <b-button variant="success" @click="generar" class="mt-3" :disabled="generarClicked">
+                        Generar</b-button>
                 </div>
             </b-col>
-            <b-col md="8" class="mb-3">
+            <b-col md="8" class="mb-3" v-if="generarClicked">
                 <div class="p-5" style="background:gray;">
                     <b-row>
                         <b-col md="4" class="mb-4">
                             <label for="text-password" class="text-light float-left">Agregar equipo</label>
                             <b-input type="text" v-model="nombre"></b-input>
-                            <b-button variant="info" @click="agregar" class="mt-3 float-right">Agregar</b-button>
+                            <b-button variant="info" @click="agregar" class="mt-3 float-right">
+                                Agregar
+                                </b-button>
                         </b-col>
                         <b-col md="8" class="mb-4">
                             <b-list-group>
-                                <b-list-group-item variant="info">Clubes</b-list-group-item>
-                                <b-list-group-item>Dapibus ac facilisis in</b-list-group-item>
-                                <b-list-group-item>Morbi leo risus</b-list-group-item>
-                                <b-list-group-item>Porta ac consectetur ac</b-list-group-item>
-                                <b-list-group-item>Vestibulum at eros</b-list-group-item>
+                                <b-list-group-item variant="info" >Clubes</b-list-group-item>
+                                <b-list-group-item v-for="(team,i) in allTeams" :key="i">Dapibus ac facilisis in</b-list-group-item>
+                                <b-list-group-item variant="secondary" 
+                                    v-for="index in nroEquiposRestantes" :key="index+'q'">
+                                    Equipo {{allTeams.length+index}}
+                                </b-list-group-item>
                             </b-list-group>
                         </b-col>
                     </b-row>
@@ -118,7 +146,7 @@ export default {
         </b-row>
     </b-container>
         <!-- <select v-model="observado">
-            <option v-for="club in allClubs" :key="club.id" :value="club.id">{{club.id}}</option>
+            <option v-for="club in allTeams" :key="club.id" :value="club.id">{{club.id}}</option>
         </select> -->
     <b-container>
         <b-row>
@@ -137,31 +165,6 @@ export default {
             </b-col>
         </b-row>
     </b-container>
-
-
-
-
-
-
-
-
-    
-    <!-- <table style="border:1px solid;">
-    <thead>
-        <tr>
-        <th>teams</th>
-        <th v-for="(club,i) in allClubs" :key="i"> {{club}}</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr v-for="(club,itemClub) in allClubs" :key="itemClub">
-        <th>{{club}}</th>
-        <td v-for="(club,item) in allClubs.length" :key="item">
-            {{itemClub==item?'':'qwe'}}
-        </td>
-        </tr>
-    </tbody>
-    </table> -->
 </div>
 </template>
 <style lang="scss" scoped>
