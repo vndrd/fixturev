@@ -24,8 +24,9 @@ export default {
         rellenar(){
             for (let i = 0; i < this.numEquipos; i++) {
                 this.allTeams.push({
-                    name: i,
+                    name: '',
                     id: i+1,
+                    edit: false,
                 })                
             }
         },
@@ -115,12 +116,17 @@ export default {
                 </div>
                 <b-list-group v-if="generarClicked">
                     <b-list-group-item variant="info" >Clubes</b-list-group-item>
-                    <b-list-group-item v-for="(team,i) in allTeams" :key="i">
-                        {{i+1}}. Equipo {{i+1}}
+                    <b-list-group-item v-for="(team,i) in allTeams" :key="i" 
+                        @dblclick="team.edit=true" 
+                        @blur="team.edit=false; $emit('update')"
+                        @keyup.enter="team.edit=false; $emit('update')"
+                        >
+                        <p v-if="team.edit==false">
+                            {{`${i+1}. ${team.name=='' ?'Equipo '+(i+1): team.name }`}}
+                        </p>
+                        <input type="text" v-if="team.edit==true" v-model="team.name">
                     </b-list-group-item>
-                    <b-list-group-item variant="secondary" 
-                        v-for="index in nroEquiposRestantes" :key="index+'q'">
-
+                    <b-list-group-item variant="secondary">
                     </b-list-group-item>
                 </b-list-group>
             </b-col>
@@ -163,5 +169,8 @@ export default {
 }
 .formulario {
     background: rgba($color: #4c5e70, $alpha: 1);
+}
+.list-group-item {
+    background-color: rgba($color: #ffffff, $alpha: .5  );
 }
 </style>
