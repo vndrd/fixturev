@@ -122,7 +122,7 @@ export default {
                         @blur="team.edit=false; $emit('update')"
                     @keyup.enter="team.edit=false; $emit('update')">
                         <b-badge  variant="warning" class="float-left counter">    {{i+1}}</b-badge>                        
-                        <p v-if="team.edit==false">
+                        <p v-if="team.edit==false" :class="team.name=='' ? 'italic':''">
                             {{` ${team.name=='' ?'Equipo '+(i+1): team.name }`}}
                         </p>
                         <input type="text" v-if="team.edit==true" v-model="team.name">
@@ -173,6 +173,7 @@ export default {
 }
 .list-group-item {
     background-color: rgba($color: #aaa, $alpha: 1  );
+    font-size: 1.2rem;
 }
 .counter {
     width: 2rem;
@@ -193,5 +194,10 @@ export default {
         width: 100%;
         color: white;
     }
+}
+.italic {
+    font-size: 1rem;
+    font-style: italic;
+    color: #ddd;
 }
 </style>
