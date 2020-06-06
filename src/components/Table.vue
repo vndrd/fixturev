@@ -5,9 +5,7 @@ export default {
         return {
             generarClicked: false,
             numEquipos: '',
-            allTeams : [    
-
-            ],
+            allTeams: [],
             matches: [],
             nombre: '',
             observado: 0,
@@ -99,36 +97,39 @@ export default {
     }
 }
 </script>
-
 <template>
 <div>
     <b-container class="mb-3" >
         <b-row>
-            <b-col md="4" class="formulario mb-3" >
-                <div  class="p-5">
-                    <label for="text-password" class="text-light">Número de equipos</label>
-                    <b-input type="text" v-model="numEquipos" :disabled="generarClicked" class="text-center"></b-input>
-                    <b-form-text class="text-light" >
-                        Número de equipos par, mayor a 2.
-                    </b-form-text>
-                    <b-button variant="success" @click="generar" class="mt-3" :disabled="generarClicked">
-                        Generar</b-button>
+            <b-col md="4" class="mb-3" >
+                <div class="formulario mb-3">
+                    <div class="header-title p-3">
+                        <h2>Fixture aleatorio</h2>
+                    </div>
+                    <div  class="p-5">
+                        <label for="text-password" class="text-light">Número de equipos</label>
+                        <b-input type="text" v-model="numEquipos" :disabled="generarClicked" class="text-center"></b-input>
+                        <b-form-text class="text-light" >
+                            Número de equipos par, mayor a 2.
+                        </b-form-text>
+                        <b-button variant="success" @click="generar" class="mt-3" :disabled="generarClicked">
+                            Generar</b-button>
+                    </div>    
                 </div>
-                <b-list-group v-if="generarClicked">
-                    <b-list-group-item variant="info" >Clubes</b-list-group-item>
+                <b-card no-body header="Equipos" v-if="generarClicked" bg-variant="secondary" text-variant="light">    
                     <b-list-group-item v-for="(team,i) in allTeams" :key="i" 
                         @dblclick="team.edit=true" 
                         @blur="team.edit=false; $emit('update')"
-                        @keyup.enter="team.edit=false; $emit('update')"
-                        >
+                    @keyup.enter="team.edit=false; $emit('update')">
+                        <b-badge  variant="warning" class="float-left counter">    {{i+1}}</b-badge>                        
                         <p v-if="team.edit==false">
-                            {{`${i+1}. ${team.name=='' ?'Equipo '+(i+1): team.name }`}}
+                            {{` ${team.name=='' ?'Equipo '+(i+1): team.name }`}}
                         </p>
                         <input type="text" v-if="team.edit==true" v-model="team.name">
                     </b-list-group-item>
                     <b-list-group-item variant="secondary">
                     </b-list-group-item>
-                </b-list-group>
+                </b-card>
             </b-col>
         <!-- <select v-model="observado">
             <option v-for="club in allTeams" :key="club.id" :value="club.id">{{club.id}}</option>
@@ -171,6 +172,26 @@ export default {
     background: rgba($color: #4c5e70, $alpha: 1);
 }
 .list-group-item {
-    background-color: rgba($color: #ffffff, $alpha: .5  );
+    background-color: rgba($color: #aaa, $alpha: 1  );
+}
+.counter {
+    width: 2rem;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    height: 2rem;
+    font-size: 1.2rem;
+    color: white;
+}
+.header-title{
+    position:relative;
+    width: calc(100% + 30px);
+    transform: translateX(-15px);
+    background-color: darkcyan;
+    h2{
+        font-weight: 100;
+        width: 100%;
+        color: white;
+    }
 }
 </style>
