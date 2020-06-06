@@ -17,10 +17,8 @@ export default {
             {id:10, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
             {id:11, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
             {id:12, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
-
         ],
         matches: [],
-        numberClubs: 12,
         name: ''
         }
     },
@@ -46,12 +44,12 @@ export default {
                 visita: i % 2 == 0 ? izq.id: der.id
             })
             let {derecha, izquierda} = dividirGrupos()
-            for (let i = 0; i < this.numberClubs-1;i++) {
+            for (let i = 0; i < this.allClubs.length-1;i++) {
                 let jornada = {
                     numero: i+1,
                     partidos: [],
                 }
-                for (let j = 0; j < this.numberClubs/2; j++) {
+                for (let j = 0; j < this.allClubs.length/2; j++) {
                     let {local, visita} = cambiarLocalia( i, derecha[j],izquierda[j])
                     jornada.partidos.push( {
                         local, visita
@@ -88,28 +86,30 @@ export default {
     <form>
         <input type="text" v-model="name">
         <br>
-        <button @click="agregar"> Agregar </button>
+        <button @click="agregar" class="btn btn-success"> Agregar </button>
         <br>
         <select v-model="observado">
             <option v-for="club in allClubs" :key="club.id" :value="club.id">{{club.id}}</option>
         </select>
     </form>
     <br>
-    <div class="jornada" v-for="(jornada,index) in matches" :key="index">
-        <h6>asd</h6>
-        <ul>
-            <li v-for="(partido,i) in jornada.partidos" :key="i+'q'">
-                <span :style="[observado == partido.local ? {'background':'red'}:{} ]">
-                    {{partido.local}}
-                </span>
-                -
-                <span :style="[observado == partido.visita ? {'background':'red'}:{} ]">
-
-                  {{partido.visita}}
-                </span>
-            </li>
-        </ul>
-    </div>
+    <b-container>
+        <b-row>
+            <b-col sm="6" md="2" v-for="(jornada,index) in matches" :key="index" >
+                <b-card bg-variant="dark" text-variant="white" :header="'Jornada '+jornada.numero" class="text-center">
+                    <li v-for="(partido,i) in jornada.partidos" :key="i+'q'">
+                        <span :style="[observado == partido.local ? {'background':'lightgreen'}:{} ]">
+                            {{partido.local}}
+                        </span>
+                        -
+                        <span :style="[observado == partido.visita ? {'background':'orange'}:{} ]">
+                            {{partido.visita}}
+                        </span>
+                    </li>
+                </b-card>
+            </b-col>
+        </b-row>
+    </b-container>
 
 
 
@@ -137,3 +137,27 @@ export default {
     </table> -->
 </div>
 </template>
+<style lang="scss" scoped>
+.jornada{
+    float: left;
+    background: #ddd;
+    margin:10px;
+}
+.jornadas-container {
+    height: auto;
+    width: 100%;
+    background: red;
+}
+.card {
+    margin-bottom: 1rem;
+}
+.card-body {
+    background-color: rgba(100, 100, 100, 0.69);;
+}
+.color-verde{
+    background: lightgreen;
+}
+.color-rojo{
+    background: orangered;
+}
+</style>
