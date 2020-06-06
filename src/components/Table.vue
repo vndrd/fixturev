@@ -90,7 +90,13 @@ export default {
                 )
             })
         },
-        
+        getNombreById(id){
+            let aux = this.allTeams.find( team => team.id === id)
+            if ( aux.name == '')
+                return id
+            return aux.name
+
+        }
     },
     computed: {
         nroEquiposRestantes: function() { return this.numEquipos }
@@ -140,11 +146,11 @@ export default {
                         <b-card bg-variant="dark" text-variant="white" :header="'Jornada '+jornada.numero" class="text-center">
                             <p v-for="(partido,i) in jornada.partidos" :key="i+'q'">
                                 <span :style="[observado == partido.local ? {'background':'lightgreen'}:{} ]">
-                                    {{partido.local}}
+                                    {{getNombreById(partido.local)}}
                                 </span>
                                 -
                                 <span :style="[observado == partido.visita ? {'background':'orange'}:{} ]">
-                                    {{partido.visita}}
+                                    {{getNombreById(partido.visita)}}
                                 </span>
                             </p>
                         </b-card>
