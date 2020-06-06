@@ -5,13 +5,13 @@ export default {
         return {
             generarClicked: false,
             numEquipos: '',
-            allTeams : [
-                
+            allTeams : [    
+
             ],
             matches: [],
             nombre: '',
             observado: 0,
-        }
+        }   
     },
     mounted(){
     
@@ -19,13 +19,7 @@ export default {
     methods: {
         agregar(e){
             e.preventDefault()
-            this.allTeams.push({
-                id:88,
-                cntVisita: 0,
-                cntLocal:0, 
-                nombre: this.nombre
-            })
-            this.nombre=''
+            
         },
         rellenar(){
             for (let i = 0; i < this.numEquipos; i++) {
@@ -119,50 +113,37 @@ export default {
                     <b-button variant="success" @click="generar" class="mt-3" :disabled="generarClicked">
                         Generar</b-button>
                 </div>
+                <b-list-group v-if="generarClicked">
+                    <b-list-group-item variant="info" >Clubes</b-list-group-item>
+                    <b-list-group-item v-for="(team,i) in allTeams" :key="i">
+                        {{i+1}}. Equipo {{i+1}}
+                    </b-list-group-item>
+                    <b-list-group-item variant="secondary" 
+                        v-for="index in nroEquiposRestantes" :key="index+'q'">
+
+                    </b-list-group-item>
+                </b-list-group>
             </b-col>
-            <b-col md="8" class="mb-3" v-if="generarClicked">
-                <div class="p-5" style="background:gray;">
-                    <b-row>
-                        <b-col md="4" class="mb-4">
-                            <label for="text-password" class="text-light float-left">Agregar equipo</label>
-                            <b-input type="text" v-model="nombre"></b-input>
-                            <b-button variant="info" @click="agregar" class="mt-3 float-right">
-                                Agregar
-                                </b-button>
-                        </b-col>
-                        <b-col md="8" class="mb-4">
-                            <b-list-group>
-                                <b-list-group-item variant="info" >Clubes</b-list-group-item>
-                                <b-list-group-item v-for="(team,i) in allTeams" :key="i">Dapibus ac facilisis in</b-list-group-item>
-                                <b-list-group-item variant="secondary" 
-                                    v-for="index in nroEquiposRestantes" :key="index+'q'">
-                                    Equipo {{allTeams.length+index}}
-                                </b-list-group-item>
-                            </b-list-group>
-                        </b-col>
-                    </b-row>
-                </div>
-            </b-col>
-        </b-row>
-    </b-container>
         <!-- <select v-model="observado">
             <option v-for="club in allTeams" :key="club.id" :value="club.id">{{club.id}}</option>
         </select> -->
-    <b-container>
-        <b-row>
-            <b-col sm="6" md="2" v-for="(jornada,index) in matches" :key="index" >
-                <b-card bg-variant="dark" text-variant="white" :header="'Jornada '+jornada.numero" class="text-center">
-                    <p v-for="(partido,i) in jornada.partidos" :key="i+'q'">
-                        <span :style="[observado == partido.local ? {'background':'lightgreen'}:{} ]">
-                            {{partido.local}}
-                        </span>
-                        -
-                        <span :style="[observado == partido.visita ? {'background':'orange'}:{} ]">
-                            {{partido.visita}}
-                        </span>
-                    </p>
-                </b-card>
-            </b-col>
+            <b-col md="8" v-if="generarClicked">
+                <b-row>
+                    <b-col sm="6" md="4" v-for="(jornada,index) in matches" :key="index" >
+                        <b-card bg-variant="dark" text-variant="white" :header="'Jornada '+jornada.numero" class="text-center">
+                            <p v-for="(partido,i) in jornada.partidos" :key="i+'q'">
+                                <span :style="[observado == partido.local ? {'background':'lightgreen'}:{} ]">
+                                    {{partido.local}}
+                                </span>
+                                -
+                                <span :style="[observado == partido.visita ? {'background':'orange'}:{} ]">
+                                    {{partido.visita}}
+                                </span>
+                            </p>
+                        </b-card>
+                    </b-col>
+                </b-row>
+            </b-col>            
         </b-row>
     </b-container>
 </div>
