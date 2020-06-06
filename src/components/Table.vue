@@ -29,7 +29,6 @@ export default {
     methods: {
         agregar(e){
             e.preventDefault()
-            this.allClubs.push(this.name)
             this.name=''
         },
         miAlgoritmo() {
@@ -86,19 +85,34 @@ export default {
 <div>
     <b-container class="mb-3" >
         <b-row>
-            <b-col md="4" class="formulario" >
+            <b-col md="4" class="formulario mb-3" >
                 <div  class="p-5">
                     <label for="text-password" class="text-light">Número de equipos</label>
-                    <b-input type="text" v-model="numEquipos" ></b-input>
-                    <b-form-text id="password-help-block">
-                        Número de equipos par, mayor a 2;
+                    <b-input type="text" v-model="numEquipos" class="text-center"></b-input>
+                    <b-form-text class="text-light">
+                        Número de equipos par, mayor a 2.
                     </b-form-text>
-                    <b-button variant="success" @click="agregar">Agregar</b-button>
+                    <b-button variant="success" @click="agregar" class="mt-3">Agregar</b-button>
                 </div>
             </b-col>
-            <b-col md="4" >
+            <b-col md="8" class="mb-3">
                 <div class="p-5" style="background:gray;">
-                    
+                    <b-row>
+                        <b-col md="4" class="mb-4">
+                            <label for="text-password" class="text-light float-left">Agregar equipo</label>
+                            <b-input type="text" v-model="nombre"></b-input>
+                            <b-button variant="info" @click="agregar" class="mt-3 float-right">Agregar</b-button>
+                        </b-col>
+                        <b-col md="8" class="mb-4">
+                            <b-list-group>
+                                <b-list-group-item variant="info">Clubes</b-list-group-item>
+                                <b-list-group-item>Dapibus ac facilisis in</b-list-group-item>
+                                <b-list-group-item>Morbi leo risus</b-list-group-item>
+                                <b-list-group-item>Porta ac consectetur ac</b-list-group-item>
+                                <b-list-group-item>Vestibulum at eros</b-list-group-item>
+                            </b-list-group>
+                        </b-col>
+                    </b-row>
                 </div>
             </b-col>
         </b-row>
@@ -151,16 +165,6 @@ export default {
 </div>
 </template>
 <style lang="scss" scoped>
-.jornada{
-    float: left;
-    background: #ddd;
-    margin:10px;
-}
-.jornadas-container {
-    height: auto;
-    width: 100%;
-    background: red;
-}
 .card {
     margin-bottom: 1rem;
 }
