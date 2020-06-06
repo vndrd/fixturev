@@ -4,6 +4,7 @@ export default {
     data(){
     return {
         observado: 0,
+        numEquipos: '',
         allClubs : [
             {id:1, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
             {id:2, cntVisita: 0,cntLocal:0, last: '',nombre: ''},
@@ -83,21 +84,33 @@ export default {
 
 <template>
 <div>
-    <form>
-        <input type="text" v-model="name">
-        <br>
-        <button @click="agregar" class="btn btn-success"> Agregar </button>
-        <br>
-        <select v-model="observado">
+    <b-container class="mb-3" >
+        <b-row>
+            <b-col md="4" class="formulario" >
+                <div  class="p-5">
+                    <label for="text-password" class="text-light">Número de equipos</label>
+                    <b-input type="text" v-model="numEquipos" ></b-input>
+                    <b-form-text id="password-help-block">
+                        Número de equipos par, mayor a 2;
+                    </b-form-text>
+                    <b-button variant="success" @click="agregar">Agregar</b-button>
+                </div>
+            </b-col>
+            <b-col md="4" >
+                <div class="p-5" style="background:gray;">
+                    
+                </div>
+            </b-col>
+        </b-row>
+    </b-container>
+        <!-- <select v-model="observado">
             <option v-for="club in allClubs" :key="club.id" :value="club.id">{{club.id}}</option>
-        </select>
-    </form>
-    <br>
+        </select> -->
     <b-container>
         <b-row>
             <b-col sm="6" md="2" v-for="(jornada,index) in matches" :key="index" >
                 <b-card bg-variant="dark" text-variant="white" :header="'Jornada '+jornada.numero" class="text-center">
-                    <li v-for="(partido,i) in jornada.partidos" :key="i+'q'">
+                    <p v-for="(partido,i) in jornada.partidos" :key="i+'q'">
                         <span :style="[observado == partido.local ? {'background':'lightgreen'}:{} ]">
                             {{partido.local}}
                         </span>
@@ -105,7 +118,7 @@ export default {
                         <span :style="[observado == partido.visita ? {'background':'orange'}:{} ]">
                             {{partido.visita}}
                         </span>
-                    </li>
+                    </p>
                 </b-card>
             </b-col>
         </b-row>
@@ -159,5 +172,8 @@ export default {
 }
 .color-rojo{
     background: orangered;
+}
+.formulario {
+    background: rgba($color: #4c5e70, $alpha: 1);
 }
 </style>
